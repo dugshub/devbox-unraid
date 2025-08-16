@@ -42,7 +42,7 @@ RUN add-apt-repository ppa:deadsnakes/ppa && \
 
 # Install uv (fast Python package manager)
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
-    mv /root/.cargo/bin/uv /usr/local/bin/
+    mv /root/.local/bin/uv /usr/local/bin/
 
 # Install Node 20 LTS
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
