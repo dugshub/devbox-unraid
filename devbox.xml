@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>DevBox</Name>
+  <Repository>devbox:latest</Repository>
+  <Registry/>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>bash</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/yourusername/devbox-unraid</Support>
+  <Project/>
+  <Overview>Complete development environment with Python 3.11/3.12, Node 20, uv, Claude Code CLI, and common dev tools. SSH in on port 2222 with root:devbox</Overview>
+  <Category>Tools: Development:</Category>
+  <WebUI/>
+  <TemplateURL/>
+  <Icon>https://raw.githubusercontent.com/walkxcode/dashboard-icons/main/png/code.png</Icon>
+  <ExtraParams/>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled></DateInstalled>
+  <DonateText/>
+  <DonateLink/>
+  <Requires/>
+  <Config Name="SSH Port" Target="22" Default="2222" Mode="tcp" Description="SSH port for remote access" Type="Port" Display="always" Required="true" Mask="false">2222</Config>
+  <Config Name="Projects Directory" Target="/projects" Default="/mnt/user/projects" Mode="rw" Description="Your code projects directory" Type="Path" Display="always" Required="true" Mask="false">/mnt/user/projects</Config>
+  <Config Name="SSH Keys" Target="/root/.ssh" Default="/mnt/user/appdata/devbox/ssh" Mode="rw" Description="Persistent SSH keys for GitHub" Type="Path" Display="always" Required="false" Mask="false">/mnt/user/appdata/devbox/ssh</Config>
+  <Config Name="Git Config" Target="/root/.gitconfig" Default="/mnt/user/appdata/devbox/gitconfig" Mode="rw" Description="Git configuration (name, email)" Type="Path" Display="always" Required="false" Mask="false">/mnt/user/appdata/devbox/gitconfig</Config>
+  <Config Name="Claude Code Config" Target="/root/.config/claude-code" Default="/mnt/user/appdata/devbox/claude-code" Mode="rw" Description="Claude Code authentication" Type="Path" Display="always" Required="false" Mask="false">/mnt/user/appdata/devbox/claude-code</Config>
+  <Config Name="Bash History" Target="/root/.bash_history" Default="/mnt/user/appdata/devbox/bash_history" Mode="rw" Description="Persistent command history" Type="Path" Display="always" Required="false" Mask="false">/mnt/user/appdata/devbox/bash_history</Config>
+  <Config Name="Timezone" Target="TZ" Default="America/Los_Angeles" Mode="" Description="Container timezone" Type="Variable" Display="always" Required="false" Mask="false">America/Los_Angeles</Config>
+  <Config Name="Docker Socket (Optional)" Target="/var/run/docker.sock" Default="/var/run/docker.sock" Mode="rw" Description="Mount Docker socket to run Docker commands inside container" Type="Path" Display="advanced" Required="false" Mask="false">/var/run/docker.sock</Config>
+  <Description>
+DevBox - Complete Development Environment
+
+Includes:
+- Python 3.11 and 3.12
+- Node.js 20 LTS  
+- UV (fast Python package manager)
+- Claude Code CLI
+- Git, Make, Tmux, Vim, and more
+- SSH server on port 2222
+
+Default login: root / devbox
+
+First time setup:
+1. SSH in: ssh root@unraid.local -p 2222
+2. Set up Git: git config --global user.name "Your Name" && git config --global user.email "your@email.com"
+3. Authenticate Claude: claude-code login
+4. Generate SSH key for GitHub: ssh-keygen -t ed25519 -C "your@email.com"
+  </Description>
+</Container>

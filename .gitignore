@@ -1,0 +1,9 @@
+# Build artifacts
+*.log
+.DS_Store
+
+# Don't commit personal configs
+gitconfig
+bash_history
+ssh/
+claude-code/
