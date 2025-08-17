@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  devbox:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: ${CONTAINER_NAME:-devbox-unraid}
+    hostname: ${HOSTNAME:-devbox}
+    restart: unless-stopped
+    
+    ports:
+      - "${SSH_PORT:-2222}:22"
+    
+    volumes:
+      # Project directories
+      - ${PROJECTS_DIR:-./projects}:/projects
+      
+      # Persistent configs
+      - ${CONFIG_DIR:-./config}/.ssh:/root/.ssh:rw
+      - ${CONFIG_DIR:-./config}/.gitconfig:/root/.gitconfig:rw
+      - ${CONFIG_DIR:-./config}/claude-code:/root/.config/claude-code:rw
+      
+      # Optional: Mount host docker socket for Docker-in-Docker
+      # - /var/run/docker.sock:/var/run/docker.sock:ro
+    
+    environment:
+      - TZ=${TZ:-America/New_York}
+      - CLAUDE_API_KEY=${CLAUDE_API_KEY:-}
+      - GIT_AUTHOR_NAME=${GIT_AUTHOR_NAME:-DevBox User}
+      - GIT_AUTHOR_EMAIL=${GIT_AUTHOR_EMAIL:-devbox@localhost}
+    
+    networks:
+      - devbox-net
+    
+    # Resource limits (optional)
+    deploy:
+      resources:
+        limits:
+          cpus: '${CPU_LIMIT:-4}'
+          memory: ${MEMORY_LIMIT:-8G}
+        reservations:
+          cpus: '${CPU_RESERVATION:-1}'
+          memory: ${MEMORY_RESERVATION:-2G}
+
+networks:
+  devbox-net:
+    driver: bridge
+    name: devbox-network
