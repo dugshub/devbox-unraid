@@ -17,9 +17,9 @@ services:
       - ${PROJECTS_DIR:-./projects}:/projects
       
       # Persistent configs
-      - ${CONFIG_DIR:-./config}/.ssh:/root/.ssh:rw
-      - ${CONFIG_DIR:-./config}/.gitconfig:/root/.gitconfig:rw
-      - ${CONFIG_DIR:-./config}/claude-code:/root/.config/claude-code:rw
+      - ${APPDATA_DIR:-./config}/.ssh:/root/.ssh:rw
+      - ${APPDATA_DIR:-./config}/.gitconfig:/root/.gitconfig:rw
+      - ${APPDATA_DIR:-./config}/claude-code:/root/.config/claude-code:rw
       
       # Optional: Mount host docker socket for Docker-in-Docker
       # - /var/run/docker.sock:/var/run/docker.sock:ro
