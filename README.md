@@ -55,12 +55,35 @@ cat ~/.ssh/id_ed25519.pub  # Copy this to GitHub
 
 ## Usage
 
+### SSH Connection Setup
+
+#### Option 1: Automatic Setup (Recommended)
+Run the provided setup script on your local machine:
+```bash
+./setup-ssh-client.sh
+```
+This will:
+- Configure SSH alias for easy connection (`ssh devbox`)
+- Set up SSH key authentication (optional)
+- Configure proper host key handling
+
+#### Option 2: Manual Setup
+Add to your `~/.ssh/config`:
+```
+Host devbox
+    HostName 10.88.111.3  # Or your Unraid IP
+    Port 2222
+    User devbox
+    StrictHostKeyChecking accept-new
+```
+
 ### Connect from IDE
 
-**VS Code:**
+**VS Code / Windsurf:**
 1. Install "Remote - SSH" extension
-2. Add host: `ssh root@unraid.local -p 2222`
-3. Connect and open `/projects`
+2. Connect to host: `devbox` (if you used the setup script)
+   Or manually: `ssh devbox@unraid.local -p 2222`
+3. Open folder: `/projects`
 
 **JetBrains:**
 1. Tools → Deployment → Configuration

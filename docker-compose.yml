@@ -18,6 +18,9 @@ services:
       - ${APPDATA_DIR:-./config}/ssh:/root/.ssh:rw
       - ${APPDATA_DIR:-./config}/claude-code:/root/.config/claude-code:rw
       
+      # SSH host keys (persistent across rebuilds)
+      - ${APPDATA_DIR:-./config}/ssh_host_keys:/etc/ssh/host_keys:rw
+      
       # Git config file (only mount if it exists)
       # Note: gitconfig is a file, not a directory
       

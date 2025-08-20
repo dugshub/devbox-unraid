@@ -3,6 +3,32 @@
 # DevBox Entrypoint Script
 # Performs initialization tasks before starting SSH server
 
+# SSH Host Keys Management
+SSH_HOST_KEYS_DIR="/etc/ssh/host_keys"
+
+# Create directory if it doesn't exist
+mkdir -p "$SSH_HOST_KEYS_DIR"
+
+# Generate or restore SSH host keys
+if [ ! -f "$SSH_HOST_KEYS_DIR/ssh_host_rsa_key" ]; then
+    echo "Generating new SSH host keys..."
+    ssh-keygen -t rsa -f "$SSH_HOST_KEYS_DIR/ssh_host_rsa_key" -N ''
+    ssh-keygen -t ecdsa -f "$SSH_HOST_KEYS_DIR/ssh_host_ecdsa_key" -N ''
+    ssh-keygen -t ed25519 -f "$SSH_HOST_KEYS_DIR/ssh_host_ed25519_key" -N ''
+else
+    echo "Using existing SSH host keys..."
+fi
+
+# Link or copy host keys to SSH directory
+for key_type in rsa ecdsa ed25519; do
+    if [ -f "$SSH_HOST_KEYS_DIR/ssh_host_${key_type}_key" ]; then
+        cp -f "$SSH_HOST_KEYS_DIR/ssh_host_${key_type}_key" "/etc/ssh/ssh_host_${key_type}_key"
+        cp -f "$SSH_HOST_KEYS_DIR/ssh_host_${key_type}_key.pub" "/etc/ssh/ssh_host_${key_type}_key.pub"
+        chmod 600 "/etc/ssh/ssh_host_${key_type}_key"
+        chmod 644 "/etc/ssh/ssh_host_${key_type}_key.pub"
+    fi
+done
+
 # Auto-configure GitHub SSH if keys are present
 if [ -f "/root/.ssh/id_rsa" ] || [ -f "/root/.ssh/id_ed25519" ] || [ -f "/root/.ssh/id_ecdsa" ]; then
     # Configure SSH for GitHub
