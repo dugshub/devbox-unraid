@@ -50,8 +50,8 @@ RUN mkdir /var/run/sshd && \
 RUN add-apt-repository ppa:deadsnakes/ppa && \
     apt-get update && \
     apt-get install -y \
-    python3.11 python3.11-dev python3.11-venv python3.11-distutils \
-    python3.12 python3.12-dev python3.12-venv python3.12-distutils \
+    python3.11 python3.11-dev python3.11-venv \
+    python3.12 python3.12-dev python3.12-venv \
     && rm -rf /var/lib/apt/lists/*
 
 # Install uv (fast Python package manager) with proper PATH setup
