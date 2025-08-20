@@ -66,10 +66,8 @@ setup_directories() {
     mkdir -p "${APPDATA_DIR}/ssh"
     mkdir -p "${APPDATA_DIR}/claude-code"
     
-    # Create gitconfig file if it doesn't exist
-    if [ ! -f "${APPDATA_DIR}/gitconfig" ]; then
-        touch "${APPDATA_DIR}/gitconfig"
-    fi
+    # Note: gitconfig will be created inside the container by git commands
+    # We don't mount it as a volume to avoid mount conflicts
     
     # Set proper permissions for SSH
     chmod 700 "${APPDATA_DIR}/ssh"
