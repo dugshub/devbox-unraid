@@ -55,12 +55,24 @@ check_compose() {
 setup_directories() {
     print_status "Setting up directories..."
     
-    mkdir -p "${SCRIPT_DIR}/projects"
-    mkdir -p "${SCRIPT_DIR}/config/.ssh"
-    mkdir -p "${SCRIPT_DIR}/config/claude-code"
+    # Use environment variables if set, otherwise use defaults
+    PROJECTS_DIR=${PROJECTS_DIR:-"${SCRIPT_DIR}/projects"}
+    APPDATA_DIR=${APPDATA_DIR:-"${SCRIPT_DIR}/config"}
+    
+    # Create project directory
+    mkdir -p "$PROJECTS_DIR"
+    
+    # Create config directories
+    mkdir -p "${APPDATA_DIR}/ssh"
+    mkdir -p "${APPDATA_DIR}/claude-code"
+    
+    # Create gitconfig file if it doesn't exist
+    if [ ! -f "${APPDATA_DIR}/gitconfig" ]; then
+        touch "${APPDATA_DIR}/gitconfig"
+    fi
     
     # Set proper permissions for SSH
-    chmod 700 "${SCRIPT_DIR}/config/.ssh"
+    chmod 700 "${APPDATA_DIR}/ssh"
 }
 
 # Load environment file
@@ -97,20 +109,51 @@ start_container() {
     
     # Get container info
     CONTAINER_NAME=${CONTAINER_NAME:-devbox-unraid}
-    SSH_PORT=${SSH_PORT:-2222}
     
     if docker ps | grep -q "$CONTAINER_NAME"; then
         print_status "DevBox is running!"
+        
+        # Get actual exposed ports from running container
+        PORTS_INFO=$(docker port "$CONTAINER_NAME" 2>/dev/null)
+        
+        # Get actual volume mounts from running container
+        VOLUMES_INFO=$(docker inspect "$CONTAINER_NAME" --format='{{range .Mounts}}{{.Source}} -> {{.Destination}}{{"\n"}}{{end}}' 2>/dev/null)
+        
         echo ""
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
         echo "  DevBox Development Environment"
         echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
         echo ""
         echo "  Container: $CONTAINER_NAME"
-        echo "  SSH Port:  $SSH_PORT"
+        echo ""
+        echo "  Exposed Ports:"
+        if [ -n "$PORTS_INFO" ]; then
+            echo "$PORTS_INFO" | while IFS= read -r line; do
+                echo "    $line"
+            done
+        else
+            echo "    No ports exposed"
+        fi
+        echo ""
+        echo "  Mounted Volumes:"
+        if [ -n "$VOLUMES_INFO" ]; then
+            echo "$VOLUMES_INFO" | while IFS= read -r line; do
+                if [ -n "$line" ]; then
+                    echo "    $line"
+                fi
+            done
+        else
+            echo "    No volumes mounted"
+        fi
         echo ""
         echo "  Connect via SSH:"
-        echo "    ssh -p $SSH_PORT root@localhost"
+        # Extract SSH port dynamically from port mapping
+        SSH_PORT=$(docker port "$CONTAINER_NAME" 22 2>/dev/null | cut -d':' -f2)
+        if [ -n "$SSH_PORT" ]; then
+            echo "    ssh -p $SSH_PORT root@localhost"
+        else
+            echo "    SSH port not exposed"
+        fi
         echo ""
         echo "  Default password: devbox"
         echo ""

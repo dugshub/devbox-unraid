@@ -14,11 +14,11 @@ services:
     
     volumes:
       # Project directories
-      - ${PROJECTS_DIR:-./projects}:/projects
+      - ${PROJECTS_DIR:-./projects}:/projects:rw
       
       # Persistent configs
-      - ${APPDATA_DIR:-./config}/.ssh:/root/.ssh:rw
-      - ${APPDATA_DIR:-./config}/.gitconfig:/root/.gitconfig:rw
+      - ${APPDATA_DIR:-./config}/ssh:/root/.ssh:rw
+      - ${APPDATA_DIR:-./config}/gitconfig:/root/.gitconfig:rw
       - ${APPDATA_DIR:-./config}/claude-code:/root/.config/claude-code:rw
       
       # Optional: Mount host docker socket for Docker-in-Docker
